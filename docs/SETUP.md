@@ -104,6 +104,44 @@ chmod +x scripts/run_manual_test.sh
 최근 24시간 AI/반도체/투자 뉴스 중 중요한 내용만 한국어로 요약
 ```
 
+## 8-1. Makefile 사용
+
+운영 명령을 짧게 쓰고 싶으면 Makefile을 사용한다.
+
+```bash
+make help
+make install
+make sync
+make test
+make hourly
+make daily
+```
+
+## 8-2. 메일로 결과 받기
+
+메일 전송 명령이 설정된 환경에서는 실행 결과를 바로 메일로 받을 수 있다.
+
+```bash
+cp email.env.example .env.local
+# .env.local 에서 EMAIL_TO 값을 본인 이메일로 수정
+make email-test
+make email-daily
+```
+
+필요 조건:
+
+- sendmail 또는 mail 또는 mailx
+- openclaw onboard 완료
+- workspace 동기화 완료
+
+설정 파일 예시:
+
+```dotenv
+EMAIL_TO=you@example.com
+EMAIL_SUBJECT=OpenClaw News Monitor Report
+EMAIL_FROM=openclaw-news-monitor@localhost
+```
+
 ## 9. 운영 시작 전 체크리스트
 
 - openclaw gateway status가 정상인가

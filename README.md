@@ -42,7 +42,10 @@ OpenClaw 기반으로 AI, 반도체, 투자 관련 뉴스를 정기적으로 검
 │   ├── sync_to_workspace.sh
 │   ├── register_hourly_cron.sh
 │   ├── register_daily_cron.sh
-│   └── run_manual_test.sh
+│   ├── run_manual_test.sh
+│   ├── send_email_report.sh
+│   └── run_and_email_report.sh
+├── Makefile
 └── docs/
 	├── ARCHITECTURE.md
 	├── SETUP.md
@@ -87,6 +90,26 @@ chmod +x scripts/register_daily_cron.sh
 ```bash
 chmod +x scripts/run_manual_test.sh
 ./scripts/run_manual_test.sh
+```
+
+### 5. Makefile로 한 번에 실행
+
+```bash
+make help
+make install
+make sync
+make test
+make hourly
+make daily
+```
+
+메일로 결과를 받고 싶으면:
+
+```bash
+cp email.env.example .env.local
+# .env.local 파일에서 EMAIL_TO를 본인 이메일로 수정
+make email-test
+make email-daily
 ```
 
 ## 설치 방법
@@ -187,6 +210,46 @@ openclaw dashboard
 ```
 
 정상 동작 시 요약 결과가 나오거나, 새롭게 중요한 뉴스가 없으면 materially new news가 없다는 메시지가 출력되어야 합니다.
+
+## 메일로 뉴스 요약 받기
+
+이 프로젝트는 선택적으로 실행 결과를 메일로 보낼 수 있습니다.
+
+필수 환경 변수:
+
+- EMAIL_TO: 결과를 받을 이메일 주소
+
+선택 환경 변수:
+
+- EMAIL_SUBJECT: 메일 제목
+- EMAIL_FROM: 발신자 주소 형식
+- RUN_PROMPT: 기본 프롬프트를 덮어쓸 때 사용
+
+예시:
+
+```bash
+cp email.env.example .env.local
+```
+
+그 다음 `.env.local` 파일에 아래처럼 적는다.
+
+```dotenv
+EMAIL_TO=you@example.com
+EMAIL_SUBJECT=OpenClaw News Monitor Report
+EMAIL_FROM=openclaw-news-monitor@localhost
+```
+
+이후에는 그냥 아래처럼 실행하면 된다.
+
+```bash
+make email-test
+make email-daily
+```
+
+주의:
+
+- 로컬 시스템에 sendmail, mail, mailx 중 하나가 설치되어 있어야 합니다.
+- 메일 전송 설정이 없는 환경에서는 스크립트가 안내 메시지를 출력하고 종료합니다.
 
 ## 문서 안내
 
